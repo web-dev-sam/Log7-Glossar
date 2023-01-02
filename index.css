@@ -54,7 +54,7 @@ h3 {
     font-weight: bold;
 }
 
-svg {
+i {
     pointer-events: none;
 }
 
@@ -145,6 +145,7 @@ li[class^="nav-level-"]:not(.nav-level-1) a:focus {
 
 .logo-wrapper {
     margin: 2rem 0 2.5rem 0;
+    cursor: pointer;
 }
 
 main {
