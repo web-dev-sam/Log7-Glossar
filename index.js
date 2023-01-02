@@ -73,8 +73,8 @@ function filterArticles() {
     function filterArticlesRecursive(articles, search) {
         let hasMatch = false;
         for (const article of articles) {
-            const title = article.title.toLowerCase();
-            const matches = title.includes(search.toLowerCase());
+            const informations = article.title.toLowerCase() + article.hash.toLowerCase() + article.content.toLowerCase();
+            const matches = informations.includes(search.toLowerCase());
             const hasChildren = article.articles != null && article.articles.length > 0;
             const childrenMatch = hasChildren ? filterArticlesRecursive(article.articles, search) : false;
             const show = matches || childrenMatch;
