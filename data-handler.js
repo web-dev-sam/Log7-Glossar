@@ -89,11 +89,11 @@ class ArticleDataHandler {
                 article.history = history;
                 return article;
             }
-    
+
             for (const article of articles) {
                 if (article.articles != null) {
                     history.push(article);
-    
+
                     const result = getArticleByPropRecursive(article.articles, prop, history);
                     if (result != null) {
                         return result;
@@ -101,7 +101,7 @@ class ArticleDataHandler {
                 }
             }
         }
-    
+
         return getArticleByPropRecursive(this.data.articles, prop);
     }
 
@@ -118,7 +118,7 @@ class ArticleDataHandler {
             }
             return titles;
         }
-    
+
         return getArticleTitlesRecursive(this.data.articles);
     }
 
@@ -129,11 +129,11 @@ class ArticleDataHandler {
                 article.history = history;
                 return article;
             }
-    
+
             for (const article of articles) {
                 if (article.articles != null) {
                     history.push(article);
-    
+
                     const result = getArticleByTitleRecursive(article.articles, title, history);
                     if (result != null) {
                         return result;
@@ -141,7 +141,7 @@ class ArticleDataHandler {
                 }
             }
         }
-    
+
         return getArticleByTitleRecursive(this.data.articles, title);
     }
 }

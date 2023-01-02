@@ -1,6 +1,6 @@
 :root {
-    --primary: #54DAFF;
-    --secondary: #93FF60;
+    --primary: #54daff;
+    --secondary: #93ff60;
     --dark-dark: #181a1d;
     --dark: #1d2023;
     --text-color: #fff;
@@ -160,8 +160,6 @@ main > div {
     width: 60%;
     height: 100%;
 }
-
-
 
 .invisible {
     visibility: hidden;

@@ -1,5 +1,4 @@
 
-customElements.get('term-article') ||
 customElements.define('term-article', class extends HTMLElement {
     constructor() {
         super();
@@ -87,7 +86,7 @@ customElements.define('term-article', class extends HTMLElement {
 
         const separator = document.createElement('i');
         separator.classList.add("fa-solid", "fa-chevron-right");
-        
+
         // Build breadcrumb links
         for (const breadcrumb of breadcrumbs) {
             const a = document.createElement('a');
