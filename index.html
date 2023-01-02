@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossar | Log7 Consult GmbH</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+
+    <script src="index.js" defer></script>
+    <script src="main-article/main-article.js" defer></script>
+</head>
+<body>
+    <aside>
+        <div class="logo-wrapper">
+            <img src="assets/logo.svg" height="70px" alt="Log7 Consult GmbH">
+        </div>
+        <input type="text" placeholder="Suchen... (Strg+P)">
+        <nav id="article-nav"></nav>
+    </aside>
+    <main>
+        <div>
+            <main-article></main-article>
+            <template id="main-article-template">
+                <article>
+                    <h1 class="center">Glossar</h1>
+                    <p>
+                        Willkommen in unserem internen Glossar für Logistikbegriffe! 
+                        Bei der Erbringung logistischer Beratungsleistungen für unsere Kunden verwenden wir eine Vielzahl von Fachbegriffen und Ausdrücken. 
+                        Dieses Glossar soll unseren Teammitgliedern als Nachschlagewerk dienen und klare und einheitliche Definitionen für die Begriffe liefern, die wir täglich verwenden.
+                    </p>
+                </article>
+            </template>
+
+            <term-article></term-article>
+            <template id="term-article-template">
+
+            </template>
+        </div>
+    </main>
+</body>
+</html>

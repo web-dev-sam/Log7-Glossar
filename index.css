@@ -1,0 +1,148 @@
+:root {
+    --dark-dark: #181a1d;
+    --dark: #1d2023;
+    --text-color: #fff;
+    --text-color-muted: #515961;
+    --shadow-color: #34383e;
+    --border: 1px solid #2b2d30;
+    --border-radius: 0.75rem;
+    --padding-big: 4.25rem;
+    --input-padding: 1rem 1.5rem;
+    --li-padding: 0.75rem 1rem;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: grid;
+    grid-template-columns: minmax(300px, 420px) 3fr;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-color);
+    font-family: "Inter", sans-serif;
+    line-height: 1.75rem;
+}
+
+aside {
+    background: var(--dark-dark);
+    border-right: var(--border);
+    padding: var(--padding-big);
+    overflow: auto;
+}
+
+h1 {
+    font-size: 4rem;
+    line-height: 4rem;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 2.25rem;
+    line-height: 2.25rem;
+    font-weight: bold;
+}
+
+h3,
+.nav-level-1 {
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    font-weight: bold;
+}
+
+.center {
+    text-align: center;
+}
+
+input {
+    background-color: var(--dark);
+    width: 100%;
+    height: 3rem;
+    border: var(--border);
+    border-radius: var(--border-radius);
+    padding: var(--input-padding);
+    color: var(--text-color);
+    transition: border-color 0.2s ease-in-out;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--shadow-color);
+}
+
+::placeholder {
+    color: var(--text-color-muted);
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+a:active {
+    opacity: 0.8;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li[class^="nav-level-"]:not(.nav-level-1) {
+    padding: var(--li-padding);
+    margin-top: 0.25rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 0.9rem;
+    height: 2rem;
+    padding: 0.5rem 1rem;
+}
+
+li[class^="nav-level-"]:not(.nav-level-1):hover {
+    background-color: var(--dark);
+}
+
+.nav-level-1 {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+.nav-level-3 {
+    margin-left: 1.5rem;
+}
+
+.nav-level-4 {
+    margin-left: 3rem;
+}
+
+.logo-wrapper {
+    margin: 2rem 0 2.5rem 0;
+}
+
+main {
+    background: var(--dark);
+    overflow: auto;
+    background: radial-gradient(69% 69% at 69% 0%, var(--shadow-color) 0%, var(--dark) 100%);
+}
+
+main > div {
+    margin: auto;
+    max-width: 50vw;
+    width: 60%;
+    height: 100%;
+}
+
+main-article {
+    display: flex;
+    margin-top: 20vh;
+}
+
+main-article input {
+    display: block;
+    width: 60%;
+    margin: 4rem auto 0 auto;
+}
