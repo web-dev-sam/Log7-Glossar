@@ -3,6 +3,9 @@ window.dataHandler = new ArticleDataHandler();
 window.addEventListener('hashchange', () => {
     updatePage();
 });
+document.getElementById("article-search").addEventListener("input", () => {
+    filterArticles();
+});
 
 updatePage();
 
@@ -42,6 +45,7 @@ function updateArticleNav() {
             a.href = `#${article.hash}`;
             a.textContent = article.title;
             li.classList.add(`nav-level-${level}`);
+            li.classList.add(`nav-${article.hash}`);
             li.appendChild(a);
             ul.appendChild(li);
     
@@ -54,4 +58,27 @@ function updateArticleNav() {
     buildArticleList(window.dataHandler.data.articles, 1, ul);
     nav.innerHTML = '';
     nav.appendChild(ul);
+}
+
+function filterArticles() {
+    const search = document.getElementById("article-search").value;
+    const data = window.dataHandler.data.articles;
+
+    function filterArticlesRecursive(articles, search) {
+        let hasMatch = false;
+        for (const article of articles) {
+            const title = article.title.toLowerCase();
+            const matches = title.includes(search.toLowerCase());
+            const hasChildren = article.articles != null && article.articles.length > 0;
+            const childrenMatch = hasChildren ? filterArticlesRecursive(article.articles, search) : false;
+            const show = matches || childrenMatch;
+            const li = document.querySelector(`.nav-${article.hash}`);
+
+            if (li != null) li.style.display = show ? 'block' : 'none';
+            if (show) hasMatch = true;
+        }
+        return hasMatch;
+    }
+
+    filterArticlesRecursive(data, search);
 }
