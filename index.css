@@ -1,4 +1,6 @@
 :root {
+    --primary: #54DAFF;
+    --secondary: #93FF60;
     --dark-dark: #181a1d;
     --dark: #1d2023;
     --text-color: #fff;
@@ -24,6 +26,7 @@ body {
     color: var(--text-color);
     font-family: "Inter", sans-serif;
     line-height: 1.75rem;
+    background-color: var(--dark);
 }
 
 aside {
@@ -45,11 +48,14 @@ h2 {
     font-weight: bold;
 }
 
-h3,
-.nav-level-1 {
+h3 {
     font-size: 1.25rem;
     line-height: 1.25rem;
     font-weight: bold;
+}
+
+svg {
+    pointer-events: none;
 }
 
 .center {
@@ -79,6 +85,7 @@ input:focus {
 a {
     color: var(--text-color);
     text-decoration: none;
+    cursor: pointer;
 }
 
 a:active {
@@ -96,19 +103,36 @@ li[class^="nav-level-"]:not(.nav-level-1) {
     margin-top: 0.25rem;
     border-radius: var(--border-radius);
     cursor: pointer;
+}
+
+li[class^="nav-level-"] {
+    padding: 0 !important;
+}
+
+li[class^="nav-level-"]:not(.nav-level-1) a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
     font-size: 0.9rem;
     line-height: 0.9rem;
     height: 2rem;
-    padding: 0.5rem 1rem;
+    width: 100%;
+    border-radius: var(--border-radius);
 }
 
 li[class^="nav-level-"]:not(.nav-level-1):hover {
     background-color: var(--dark);
 }
 
+li[class^="nav-level-"]:not(.nav-level-1) a:focus {
+    background-color: var(--shadow-color);
+}
+
 .nav-level-1 {
     margin-top: 3rem;
     margin-bottom: 1rem;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    font-weight: bold;
 }
 
 .nav-level-3 {
@@ -136,6 +160,10 @@ main > div {
     height: 100%;
 }
 
+.invisible {
+    visibility: hidden;
+}
+
 main-article {
     display: flex;
     margin-top: 20vh;
@@ -145,4 +173,33 @@ main-article input {
     display: block;
     width: 60%;
     margin: 4rem auto 0 auto;
+}
+
+term-article article {
+    margin-top: 10vh;
+}
+
+term-article .breadcrumbs a {
+    text-decoration: underline;
+}
+
+term-article a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+term-article p a {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+term-article .sub-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    font-size: 2.25rem;
 }
