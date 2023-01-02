@@ -15,7 +15,7 @@ customElements.define('term-article', class extends HTMLElement {
         this.contentElement = rootElement.querySelector('.content');
 
         this.page = document.location.hash.replace('#', '');
-        this.article = window.dataHandler.getArticleByHash(this.page);
+        this.article = window.dataHandler.getArticleByProp("hash", this.page);
         this.build();
 
         this.appendChild(rootElement);
@@ -66,7 +66,15 @@ customElements.define('term-article', class extends HTMLElement {
      */
     buildContent() {
         const content = this.article.content;
-        this.contentElement.innerText = content;
+        const doc = new DOMParser().parseFromString(content, "text/html");
+        const cleanedContent = doc.documentElement.textContent;
+
+        const linkedContent = cleanedContent.replace(new RegExp(window.dataHandler.getArticleTitles().join('|'), 'g'), (match) => {
+            const article = window.dataHandler.getArticleByProp("title", match);
+            return `<a href="#${article.hash}">${match}</a>`;
+        });
+
+        this.contentElement.innerHTML = linkedContent;
     }
 
 

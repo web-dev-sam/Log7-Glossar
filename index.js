@@ -16,17 +16,18 @@ document.getElementById("article-search").addEventListener("input", () => {
 updatePage();
 
 function updatePage() {
+    const pageHash = document.location.hash.replace('#', '');
+
     updateArticleNav();
-    updateArticles();
+    updateArticles(pageHash);
 }
 
-function updateArticles() {
+function updateArticles(pageHash) {
     const wrapper = document.getElementById('article-wrapper');
     wrapper.innerHTML = '';
 
-    const page = document.location.hash.replace('#', '');
-    const article = window.dataHandler.getArticleByHash(page);
-    if (page === '' || article == null) {
+    const article = window.dataHandler.getArticleByProp("hash", pageHash);
+    if (pageHash === '' || article == null) {
         wrapper.innerHTML = `<main-article></main-article>`;
     } else {
         wrapper.innerHTML = `<term-article></term-article>`;

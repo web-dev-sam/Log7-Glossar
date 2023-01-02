@@ -43,7 +43,7 @@ class ArticleDataHandler {
     }
 
     getArticleBefore(hash) {
-        const article = this.getArticleByHash(hash);
+        const article = this.getArticleByProp("hash", hash);
         if (article == null) {
             return null;
         }
@@ -57,11 +57,11 @@ class ArticleDataHandler {
     }
 
     getArticleAfter(hash) {
-        const article = this.getArticleByHash(hash);
+        const article = this.getArticleByProp("hash", hash);
         if (article == null) {
             return null;
         }
-        
+
         const history = article.history || [];
         const parent = history[history.length - 1];
         const articles = parent?.articles || this.data.articles;
@@ -70,9 +70,9 @@ class ArticleDataHandler {
         return nextArticle;
     }
 
-    getArticleByHash(hash) {
-        function getArticleByHashRecursive(articles, hash, history = []) {
-            const article = articles.find(a => a.hash === hash);
+    getArticleByProp(prop, value) {
+        function getArticleByPropRecursive(articles, prop, history = []) {
+            const article = articles.find(a => a[prop] === value);
             if (article != null) {
                 article.history = history;
                 return article;
@@ -82,7 +82,7 @@ class ArticleDataHandler {
                 if (article.articles != null) {
                     history.push(article);
     
-                    const result = getArticleByHashRecursive(article.articles, hash, history);
+                    const result = getArticleByPropRecursive(article.articles, prop, history);
                     if (result != null) {
                         return result;
                     }
@@ -90,6 +90,46 @@ class ArticleDataHandler {
             }
         }
     
-        return getArticleByHashRecursive(this.data.articles, hash);
+        return getArticleByPropRecursive(this.data.articles, prop);
+    }
+
+    getArticleTitles() {
+        function getArticleTitlesRecursive(articles) {
+            const titles = [];
+            for (const article of articles) {
+                titles.push(article.title);
+
+                if (article.articles != null) {
+                    const subTitles = getArticleTitlesRecursive(article.articles);
+                    titles.push(...subTitles);
+                }
+            }
+            return titles;
+        }
+    
+        return getArticleTitlesRecursive(this.data.articles);
+    }
+
+    getArticleByTitle(title) {
+        function getArticleByTitleRecursive(articles, title, history = []) {
+            const article = articles.find(a => a.title === title);
+            if (article != null) {
+                article.history = history;
+                return article;
+            }
+    
+            for (const article of articles) {
+                if (article.articles != null) {
+                    history.push(article);
+    
+                    const result = getArticleByTitleRecursive(article.articles, title, history);
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+        }
+    
+        return getArticleByTitleRecursive(this.data.articles, title);
     }
 }
