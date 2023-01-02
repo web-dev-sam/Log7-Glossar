@@ -3,6 +3,12 @@ window.dataHandler = new ArticleDataHandler();
 window.addEventListener('hashchange', () => {
     updatePage();
 });
+window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'p') {
+        e.preventDefault();
+        document.getElementById('article-search').focus();
+    }
+});
 document.getElementById("article-search").addEventListener("input", () => {
     filterArticles();
 });
