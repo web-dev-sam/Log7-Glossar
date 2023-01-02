@@ -1,8 +1,20 @@
 
 class ArticleDataHandler {
 
-    constructor() {
-        this.data = {
+    /**
+     * Article data from local storage
+     */
+    get data() {
+        const data = localStorage.getItem("article-data");
+        if (data == null) {
+            localStorage.setItem("article-data", JSON.stringify(this.getDefaultData()));
+        }
+
+        return JSON.parse(localStorage.getItem("article-data"));
+    }
+
+    getDefaultData() {
+        return {
             articles: [
                 {
                     hash: "web-components",
