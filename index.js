@@ -43,11 +43,11 @@ class App {
 
     updatePage() {
         this.updateArticleNav();
-        this.updateArticles();
+        this.updateArticle();
     }
 
 
-    updateArticles() {
+    updateArticle() {
         this.page = document.location.hash.replace('#', '');
         this.article = this.dataHandler.getArticleByHash(this.page);
         this.wrapperElement.innerHTML = this.page == null || this.article == null ?

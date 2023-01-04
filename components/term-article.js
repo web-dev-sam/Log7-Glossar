@@ -64,7 +64,7 @@ export default class extends HTMLElement {
         const titleRegex = window.app.dataHandler.getArticleTitlesRegex();
         const linkedContent = this.article.content.replace(titleRegex, (match) => {
             const article = window.app.dataHandler.getArticleByTitle(match);
-            return html`<a href="#${article.hash}">${article.title}</a>`;
+            return html`<a href="#${article.hash}">${match}</a>`;
         });
 
         this.contentElement.innerHTML = linkedContent;
@@ -94,7 +94,6 @@ export default class extends HTMLElement {
 
 
     editArticle() {
-        console.log(this.rootElement)
         const content = this.rootElement.querySelector(".content");
         const pen = this.rootElement.querySelector(".fa-pen");
         const disk = this.rootElement.querySelector(".fa-floppy-disk");
@@ -104,7 +103,8 @@ export default class extends HTMLElement {
         content.focus();
 
         if (saving) {
-            window.app.dataHandler.saveArticleContent(this.page, content.innerHTML);
+            window.app.dataHandler.saveArticleContent(this.page, content.innerText);
+            window.app.updateArticle();
             disk.classList.add("fa-pen");
         } else {
             pen.classList.add("fa-floppy-disk");

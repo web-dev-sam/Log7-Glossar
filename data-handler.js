@@ -60,7 +60,7 @@ export default class ArticlesHandler {
     getArticleTitlesRegex() {
         const articles = this.#getArticleList();
         const titles = articles.map(a => a.title);
-        return new RegExp(`\\b(${titles.join('|')})\\b`, 'g');;
+        return new RegExp(`\\b(${titles.join('|')})\\b`, "gi");
     }
 
 
@@ -79,7 +79,7 @@ export default class ArticlesHandler {
 
     #getArticleByProp(data, prop, value) {
         function getArticleByPropRecursive(articles, prop) {
-            const article = articles.find(a => a[prop] === value);
+            const article = articles.find(a => a[prop].toLowerCase() === value.toLowerCase());
             if (article != null) {
                 return article;
             }
