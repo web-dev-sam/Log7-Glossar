@@ -8,11 +8,18 @@ export default class extends HTMLElement {
         const templateContent = template.content;
         const rootElement = templateContent.cloneNode(true);
 
+
         this.prevElement = rootElement.querySelector('.prev');
         this.nextElement = rootElement.querySelector('.next');
         this.breadcrumbElement = rootElement.querySelector('.breadcrumbs');
         this.titleElement = rootElement.querySelector('.title');
         this.contentElement = rootElement.querySelector('.content');
+        this.isNew = this.hasAttribute('is-new');
+        this.parentHash = this.getAttribute('parent-hash');
+        console.log(this.parentHash);
+        if (this.isNew) {
+            rootElement.querySelector(".edit-icon").classList.add("fa-floppy-disk");
+        }
 
         this.page = document.location.hash.replace('#', '');
         this.article = window.app.dataHandler.getArticleByHash(this.page);
@@ -27,8 +34,11 @@ export default class extends HTMLElement {
      * Build the article
      */
     build() {
+        if (!this.isNew) {
+            this.buildBreadcrumbs();
+        }
+
         this.buildPrevNext();
-        this.buildBreadcrumbs();
         this.setTitle();
         this.buildContent();
     }
@@ -38,6 +48,12 @@ export default class extends HTMLElement {
      * Build prev and next links
      */
     buildPrevNext() {
+        if (this.isNew) {
+            this.prevElement.classList.add('invisible');
+            this.nextElement.classList.add('invisible');
+            return;
+        }
+
         const prev = window.app.dataHandler.getArticleBefore(this.page);
         const next = window.app.dataHandler.getArticleAfter(this.page);
 
@@ -53,7 +69,13 @@ export default class extends HTMLElement {
      * Set the title
      */
     setTitle() {
-        this.titleElement.textContent = this.article.title;
+        if (this.isNew) {
+            this.titleElement.innerHTML = html`
+                <input class="new-article-title" placeholder="Your Title..."></input>
+            `;
+            return;
+        }
+        this.titleElement.textContent = this.article?.title;
     }
 
 
@@ -61,6 +83,13 @@ export default class extends HTMLElement {
      * Build content and add it to the DOM
      */
     buildContent() {
+        if (this.isNew) {
+            this.contentElement.innerHTML = html`
+                <textarea onkeyup="textAreaAdjust(this)" class="new-article-content" placeholder="Enter article content here"></textarea>
+            `;
+            return;
+        }
+
         const titleRegex = window.app.dataHandler.getArticleTitlesRegex();
         const linkedContent = this.article.content.replace(titleRegex, (match) => {
             const article = window.app.dataHandler.getArticleByTitle(match);
@@ -95,19 +124,27 @@ export default class extends HTMLElement {
 
     editArticle() {
         const content = this.rootElement.querySelector(".content");
-        const pen = this.rootElement.querySelector(".fa-pen");
-        const disk = this.rootElement.querySelector(".fa-floppy-disk");
-        const saving = content.contentEditable === "true";
+        const editIcon = this.rootElement.querySelector(".edit-icon");
+        const saving = editIcon.classList.contains("fa-floppy-disk");
 
         content.contentEditable = saving ? "false" : "true";
         content.focus();
 
+        if (saving && this.isNew) {
+            const title = this.rootElement.querySelector(".new-article-title").value;
+            const content = this.rootElement.querySelector(".new-article-content").value;
+            const newArticle = window.app.dataHandler.addArticle(title, content, this.parentHash);
+            window.app.updateArticleNav();
+            window.location.hash = newArticle.hash;
+            return;
+        }
+
         if (saving) {
             window.app.dataHandler.saveArticleContent(this.page, content.innerText);
             window.app.updateArticle();
-            disk.classList.add("fa-pen");
+            editIcon.classList.add("fa-pen");
         } else {
-            pen.classList.add("fa-floppy-disk");
+            editIcon.classList.add("fa-floppy-disk");
         }
     }
 

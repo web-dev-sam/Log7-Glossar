@@ -3,6 +3,7 @@ export default class ArticlesHandler {
 
     constructor() {
         this.data = this.#getData();
+        console.log(this.data);
     }
 
 
@@ -69,6 +70,35 @@ export default class ArticlesHandler {
         article.content = content;
 
         this.#saveData(this.data);
+    }
+
+
+    addArticle(title, content, parentHash) {
+        const article = {
+            title,
+            content,
+            hash: this.#generateHash(title),
+        };
+
+        if (parentHash) {
+            const parent = this.getArticleByHash(parentHash);
+            if (parent.articles) {
+                parent.articles.push(article);
+            } else {
+                parent.articles = [article];
+            }
+        } else {
+            this.data.articles.push(article);
+        }
+
+        this.#saveData(this.data);
+        
+        return article;
+    }
+
+
+    #generateHash(title) {
+        return title.toLowerCase().replaceAll(/[^a-z0-9]/g, "-");
     }
 
 

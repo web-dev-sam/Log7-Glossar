@@ -27,3 +27,12 @@ export function escapeHTML(unsafeText) {
     const doc = new DOMParser().parseFromString(unsafeText, "text/html");
     return doc.body.textContent;
 }
+
+
+/**
+ * Makes a textarea grow as the user types
+ */
+export function textAreaAdjust(element) {
+    element.style.height = "1px";
+    element.style.height = (25 + element.scrollHeight) + "px";
+}

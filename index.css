@@ -99,6 +99,10 @@ ul {
 }
 
 li[class^="nav-level-"]:not(.nav-level-1) {
+    height: 2rem;
+}
+
+li[class^="nav-level-"]:not(.nav-level-1) {
     padding: var(--li-padding);
     margin-top: 0.25rem;
     border-radius: var(--border-radius);
@@ -115,16 +119,62 @@ li[class^="nav-level-"]:not(.nav-level-1) a {
     font-size: 0.9rem;
     line-height: 0.9rem;
     height: 2rem;
-    width: 100%;
+    width: calc(100% - 2rem);
     border-radius: var(--border-radius);
 }
 
-li[class^="nav-level-"]:not(.nav-level-1):hover {
+li[class^="nav-level-"]:not(.nav-level-1) svg {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    height: 0.9rem;
+}
+
+li[class^="nav-level-"]:not(.nav-level-1) a:hover {
     background-color: var(--dark);
 }
 
 li[class^="nav-level-"]:not(.nav-level-1) a:focus {
     background-color: var(--shadow-color);
+}
+
+li[class^="nav-level-"] {
+    position: relative;
+}
+
+li[class^="nav-level-"]:not(.add-article-category) svg {
+    position: absolute;
+    right: -1rem;
+}
+
+li.nav-level-3 svg {
+    display: none !important;
+}
+
+li.nav-level-1 svg {
+    position: absolute;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    top: -0.5rem;
+}
+
+li.nav-level-1.add-article-category svg {
+    position: absolute;
+    cursor: pointer;
+    padding: 1rem;
+    right: calc(50% - 0.5rem);
+    transform: translateX(50%);
+}
+
+li.nav-level-1 svg:hover {
+    opacity: 0.8;
+    background-color: var(--dark);
+    border-radius: var(--border-radius);
+}
+
+li[class^="nav-level-"]:not(.add-article-category) svg:hover {
+    opacity: 0.8;
+    background-color: var(--dark);
+    border-radius: var(--border-radius);
 }
 
 .nav-level-1 {
@@ -235,4 +285,35 @@ term-article .fa-floppy-disk:hover {
 
 term-article .fa-chevron-right {
     margin: 0 1rem;
+}
+
+term-article textarea.new-article-content {
+    width: 100%;
+    height: fit-content;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    font-family: "Inter", sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    resize: none;
+    overflow: hidden;
+}
+
+term-article input.new-article-title {
+    width: 100%;
+    height: fit-content;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    font-family: "Inter", sans-serif;
+    font-size: 2.25rem;
+    line-height: 2.25rem;
+    padding: 0;
+    overflow: hidden;
+}
+
+term-article textarea.new-article-content:focus,
+term-article textarea.new-article-title:focus {
+    outline: none;
 }

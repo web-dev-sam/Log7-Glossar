@@ -15,11 +15,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="index.css">
 
-    <script src="utils.js" type="module"></script>
-    <script src="data-handler.js" type="module"></script>
     <script src="index.js" type="module"></script>
-    <script src="components/main-article.js" type="module"></script>
-    <script src="components/term-article.js" type="module"></script>
 </head>
 
 <body>
@@ -57,7 +53,7 @@
                 <div class="breadcrumbs"></div>
                 <div class="title-area">
                     <h2 class="title"></h2>
-                    <h2><i class="fa-solid fa-pen" onclick="window.app.termArticleElement.editArticle()"></i></h2>
+                    <h2><i class="fa-solid edit-icon fa-pen" onclick="window.app.termArticleElement.editArticle()"></i></h2>
                 </div>
                 <p class="content"></p>
             </article>

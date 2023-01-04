@@ -1,7 +1,7 @@
 import ArticlesHandler from './data-handler.js';
 import TermArticle from './components/term-article.js';
 import MainArticle from './components/main-article.js';
-import { html } from './utils.js';
+import { html, textAreaAdjust } from './utils.js';
 
 class App {
 
@@ -50,10 +50,21 @@ class App {
     updateArticle() {
         this.page = document.location.hash.replace('#', '');
         this.article = this.dataHandler.getArticleByHash(this.page);
-        this.wrapperElement.innerHTML = this.page == null || this.article == null ?
+
+        if (this.page === 'new-article') {
+            this.wrapperElement.innerHTML = html`<term-article is-new="true" parent-hash=""></term-article>`;
+        } else {
+            this.wrapperElement.innerHTML = this.page == null || this.article == null ?
             html`<main-article></main-article>` :
             html`<term-article></term-article>`;
+        }
 
+        this.termArticleElement = document.querySelector('term-article');
+    }
+
+
+    addArticleCategory(parentHash) {
+        this.wrapperElement.innerHTML = html`<term-article is-new="true" parent-hash="${parentHash ?? ''}"></term-article>`;
         this.termArticleElement = document.querySelector('term-article');
     }
 
@@ -70,7 +81,7 @@ class App {
                 // Build nav item
                 this.navListElement.innerHTML += html`
                     <li class="nav-level-${level} nav-${article.hash}">
-                        <a href="#${article.hash}">${article.title}</a>
+                        <a href="#${article.hash}">${article.title}</a><i class="fa-solid fa-plus" onclick="window.app.addArticleCategory('${article.hash}')"></i>
                     </li>
                 `;
 
@@ -82,6 +93,12 @@ class App {
         }
 
         buildArticleList();
+
+        this.navListElement.innerHTML += html`
+            <li class="nav-level-1 add-article-category" onclick="window.app.addArticleCategory()">
+                <i class="fa-solid fa-plus"></i>
+            </li>
+        `;
     }
 
 
@@ -111,6 +128,7 @@ class App {
 }
 
 window.app = new App();
+window.textAreaAdjust = textAreaAdjust;
 
 customElements.define('term-article', TermArticle);
 customElements.define('main-article', MainArticle);
