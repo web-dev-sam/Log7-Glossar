@@ -32,8 +32,18 @@ class App {
             this.searchElement.focus();
         }
 
-        if (e.key === 'Escape') {
-            this.termArticleElement?.cancelEditing?.();
+        if (this.termArticleElement && e.key === 'Escape') {
+            this.termArticleElement.cancelEditing();
+        }
+
+        if (this.termArticleElement && (
+            (e.key === 'Enter' && e.ctrlKey) ||
+            (e.key === 's' && e.ctrlKey)
+        )) {
+            e.preventDefault();
+
+            const newArticle = this.termArticleElement.saveChanges();
+            window.app.updatePage(newArticle);
         }
     }
 

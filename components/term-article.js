@@ -151,12 +151,16 @@ export default class extends HTMLElement {
         }
 
         if (saving) {
-            const newArticle = window.app.dataHandler.saveArticle(this.page, this.titleElement.innerText.trim(), this.contentElement.innerText.trim());
+            const newArticle = this.saveChanges();
             window.app.updatePage(newArticle);
             editIcon.classList.add("fa-pen");
         } else {
             editIcon.classList.add("fa-floppy-disk");
         }
+    }
+
+    saveChanges() {
+        window.app.dataHandler.saveArticle(this.page, this.titleElement.innerText.trim(), this.contentElement.innerText.trim());
     }
 
     cancelEditing() {
