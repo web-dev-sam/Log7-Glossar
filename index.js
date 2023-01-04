@@ -1,5 +1,6 @@
 import ArticlesHandler from './data-handler.js';
 import TermArticle from './components/term-article.js';
+import MainArticle from './components/main-article.js';
 import { html } from './utils.js';
 
 class App {
@@ -112,3 +113,4 @@ class App {
 window.app = new App();
 
 customElements.define('term-article', TermArticle);
+customElements.define('main-article', MainArticle);
