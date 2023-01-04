@@ -198,6 +198,18 @@ term-article p:not([contenteditable="true"]) a {
     font-weight: bold;
 }
 
+term-article p[contenteditable="true"] a {
+    background: none;
+    -webkit-text-fill-color: var(--text-color);
+    cursor: text;
+    font-weight: normal;
+}
+
+term-article p[contenteditable="true"] a:hover {
+    opacity: 1;
+    text-decoration: none;
+}
+
 term-article .sub-nav {
     display: flex;
     justify-content: space-between;
