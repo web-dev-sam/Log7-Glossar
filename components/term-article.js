@@ -113,7 +113,7 @@ export default class extends HTMLElement {
             window.app.dataHandler.getArticleBreadcrumbs(this.page);
 
         if (this.isNew) breadcrumbs.push({
-            title: "New Article",
+            title: "Neuer Artikel",
             hash: "new-article",
         });
 
@@ -157,6 +157,15 @@ export default class extends HTMLElement {
         } else {
             editIcon.classList.add("fa-floppy-disk");
         }
+    }
+
+    cancelEditing() {
+        if (this.isNew) {
+            window.location.hash = this.parentHash;
+            return;
+        }
+
+        window.app.updatePage();
     }
 
     deleteArticle() {

@@ -31,6 +31,10 @@ class App {
             e.preventDefault();
             this.searchElement.focus();
         }
+
+        if (e.key === 'Escape') {
+            this.termArticleElement?.cancelEditing?.();
+        }
     }
 
 
@@ -60,8 +64,8 @@ class App {
             this.wrapperElement.innerHTML = html`<term-article is-new="true" parent-hash=""></term-article>`;
         } else {
             this.wrapperElement.innerHTML = this.page == null || this.article == null ?
-            html`<main-article></main-article>` :
-            html`<term-article></term-article>`;
+                html`<main-article></main-article>` :
+                html`<term-article></term-article>`;
         }
 
         this.termArticleElement = document.querySelector('term-article');
