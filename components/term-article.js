@@ -35,10 +35,7 @@ export default class extends HTMLElement {
      * Build the article
      */
     build() {
-        if (!this.isNew) {
-            this.buildBreadcrumbs();
-        }
-
+        this.buildBreadcrumbs();
         this.buildPrevNext();
         this.setTitle();
         this.buildContent();
@@ -111,7 +108,14 @@ export default class extends HTMLElement {
      * Build breadcrumbs and add them to the DOM
      */
     buildBreadcrumbs() {
-        const breadcrumbs = window.app.dataHandler.getArticleBreadcrumbs(this.page);
+        const breadcrumbs = this.isNew ? 
+            window.app.dataHandler.getArticleBreadcrumbs(this.parentHash) :
+            window.app.dataHandler.getArticleBreadcrumbs(this.page);
+
+        if (this.isNew) breadcrumbs.push({
+            title: "New Article",
+            hash: "new-article",
+        });
 
         // Map the breadcrumbs to an HTML string array of links and arrows
         // Then flatten the array and remove the last arrow
