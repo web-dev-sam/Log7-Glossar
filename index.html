@@ -15,10 +15,11 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="index.css">
 
-    <script src="data-handler.js" defer></script>
-    <script src="index.js" defer></script>
-    <script src="components/main-article.js" defer></script>
-    <script src="components/term-article.js" defer></script>
+    <script src="utils.js" type="module"></script>
+    <script src="data-handler.js" type="module"></script>
+    <script src="index.js" type="module"></script>
+    <script src="components/main-article.js" type="module"></script>
+    <script src="components/term-article.js" type="module"></script>
 </head>
 
 <body>
@@ -27,7 +28,9 @@
             <img src="assets/logo.svg" height="70px" alt="Log7 Consult GmbH">
         </div>
         <input id="article-search" type="text" placeholder="Suchen... (Strg+P)">
-        <nav id="article-nav"></nav>
+        <nav id="article-nav">
+            <ul></ul>
+        </nav>
     </aside>
     <main>
         <div id="article-wrapper">
@@ -52,7 +55,10 @@
                     <a class="next"><i class="fa-solid fa-arrow-right"></i></a>
                 </div>
                 <div class="breadcrumbs"></div>
-                <h2 class="title"></h2>
+                <div class="title-area">
+                    <h2 class="title"></h2>
+                    <h2><i class="fa-solid fa-pen" onclick="window.app.termArticleElement.editArticle()"></i></h2>
+                </div>
                 <p class="content">
                     The <a href="#proxy">Proxy</a> object enables you to create a proxy for another object, which can
                     intercept and redefine fundamental operations for that object.

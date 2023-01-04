@@ -1,5 +1,6 @@
+import { html } from '../utils.js';
 
-customElements.define('term-article', class extends HTMLElement {
+export default class extends HTMLElement {
     constructor() {
         super();
 
@@ -14,10 +15,11 @@ customElements.define('term-article', class extends HTMLElement {
         this.contentElement = rootElement.querySelector('.content');
 
         this.page = document.location.hash.replace('#', '');
-        this.article = window.dataHandler.getArticleByProp("hash", this.page);
+        this.article = window.app.dataHandler.getArticleByHash(this.page);
         this.build();
 
         this.appendChild(rootElement);
+        this.rootElement = this.firstElementChild;
     }
 
 
@@ -27,7 +29,7 @@ customElements.define('term-article', class extends HTMLElement {
     build() {
         this.buildPrevNext();
         this.buildBreadcrumbs();
-        this.setTitle(this.article.title);
+        this.setTitle();
         this.buildContent();
     }
 
@@ -36,16 +38,11 @@ customElements.define('term-article', class extends HTMLElement {
      * Build prev and next links
      */
     buildPrevNext() {
-        const prev = window.dataHandler.getArticleBefore(this.page);
-        const next = window.dataHandler.getArticleAfter(this.page);
+        const prev = window.app.dataHandler.getArticleBefore(this.page);
+        const next = window.app.dataHandler.getArticleAfter(this.page);
 
-        if (prev == null) {
-            this.prevElement.classList.add('invisible');
-        }
-
-        if (next == null) {
-            this.nextElement.classList.add('invisible');
-        }
+        if (prev == null) this.prevElement.classList.add('invisible');
+        if (next == null) this.nextElement.classList.add('invisible');
 
         this.prevElement.href = `#${prev?.hash}`;
         this.nextElement.href = `#${next?.hash}`;
@@ -55,8 +52,8 @@ customElements.define('term-article', class extends HTMLElement {
     /**
      * Set the title
      */
-    setTitle(title) {
-        this.titleElement.textContent = title;
+    setTitle() {
+        this.titleElement.textContent = this.article.title;
     }
 
 
@@ -64,13 +61,10 @@ customElements.define('term-article', class extends HTMLElement {
      * Build content and add it to the DOM
      */
     buildContent() {
-        const content = this.article.content;
-        const doc = new DOMParser().parseFromString(content, "text/html");
-        const cleanedContent = doc.documentElement.textContent;
-
-        const linkedContent = cleanedContent.replace(new RegExp(window.dataHandler.getArticleTitles().join('|'), 'g'), (match) => {
-            const article = window.dataHandler.getArticleByProp("title", match);
-            return `<a href="#${article.hash}">${match}</a>`;
+        const titleRegex = window.app.dataHandler.getArticleTitlesRegex();
+        const linkedContent = this.article.content.replace(titleRegex, (match) => {
+            const article = window.app.dataHandler.getArticleByTitle(match);
+            return html`<a href="#${article.hash}">${article.title}</a>`;
         });
 
         this.contentElement.innerHTML = linkedContent;
@@ -81,28 +75,40 @@ customElements.define('term-article', class extends HTMLElement {
      * Build breadcrumbs and add them to the DOM
      */
     buildBreadcrumbs() {
-        const breadcrumbs = this.article.history || [];
-        const breadcrumbParts = [];
+        const breadcrumbs = window.app.dataHandler.getArticleBreadcrumbs(this.page);
 
-        const separator = document.createElement('i');
-        separator.classList.add("fa-solid", "fa-chevron-right");
+        // Map the breadcrumbs to an HTML string array of links and arrows
+        // Then flatten the array and remove the last arrow
+        // Then reduce the array to one string and add it to the DOM
+        const breadcrumbsHTML = breadcrumbs
+            .map(breadcrumb => ([
+                html`<a href="#${breadcrumb.hash}">${breadcrumb.title}</a>`,
+                html`<i class="fa-solid fa-chevron-right"></i>`,
+            ]))
+            .flat()
+            .slice(0, -1)
+            .reduce((a, b) => a + b, "");
 
-        // Build breadcrumb links
-        for (const breadcrumb of breadcrumbs) {
-            const a = document.createElement('a');
-            a.href = `#${breadcrumb.hash}`;
-            a.textContent = breadcrumb.title;
-            breadcrumbParts.push(a);
-        }
+        this.breadcrumbElement.innerHTML = breadcrumbsHTML;
+    }
 
-        // Add breadcrumb links to breadcrumb element
-        for (let i = 0; i < breadcrumbParts.length; i++) {
-            this.breadcrumbElement.appendChild(breadcrumbParts[i]);
 
-            if (i < breadcrumbParts.length - 1) {
-                this.breadcrumbElement.appendChild(separator.cloneNode(true));
-            }
+    editArticle() {
+        console.log(this.rootElement)
+        const content = this.rootElement.querySelector(".content");
+        const pen = this.rootElement.querySelector(".fa-pen");
+        const disk = this.rootElement.querySelector(".fa-floppy-disk");
+        const saving = content.contentEditable === "true";
+
+        content.contentEditable = saving ? "false" : "true";
+        content.focus();
+
+        if (saving) {
+            window.app.dataHandler.saveArticleContent(this.page, content.innerHTML);
+            disk.classList.add("fa-pen");
+        } else {
+            pen.classList.add("fa-floppy-disk");
         }
     }
 
-});
+};

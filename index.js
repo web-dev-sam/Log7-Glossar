@@ -1,91 +1,114 @@
+import ArticlesHandler from './data-handler.js';
+import TermArticle from './components/term-article.js';
+import { html } from './utils.js';
 
-window.dataHandler = new ArticleDataHandler();
-window.addEventListener('hashchange', () => {
-    updatePage();
-});
-window.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'p') {
-        e.preventDefault();
-        document.getElementById('article-search').focus();
+class App {
+
+    constructor() {
+        this.dataHandler = new ArticlesHandler();
+
+        this.wrapperElement = document.getElementById('article-wrapper');
+        this.searchElement = document.getElementById("article-search");
+        this.navElement = document.getElementById('article-nav');
+        this.navListElement = document.querySelector('#article-nav > ul');
+        this.termArticleElement = document.querySelector('term-article');
+
+        this.setupEventListeners();
+        this.updatePage();
     }
-});
-document.getElementById("article-search").addEventListener("input", () => {
-    filterArticles();
-});
 
-updatePage();
 
-function updatePage() {
-    const pageHash = document.location.hash.replace('#', '');
-
-    updateArticleNav();
-    updateArticles(pageHash);
-}
-
-function updateArticles(pageHash) {
-    const wrapper = document.getElementById('article-wrapper');
-    wrapper.innerHTML = '';
-
-    const article = window.dataHandler.getArticleByProp("hash", pageHash);
-    if (pageHash === '' || article == null) {
-        wrapper.innerHTML = `<main-article></main-article>`;
-    } else {
-        wrapper.innerHTML = `<term-article></term-article>`;
+    setupEventListeners() {
+        window.addEventListener('hashchange', () => this.updatePage());
+        window.addEventListener('keydown', e => this.handleKeyDown(e));
+        this.searchElement.addEventListener("input", () => this.filterArticles());
     }
-}
 
-function updateArticleNav() {
-    const nav = document.getElementById('article-nav');
-    const ul = document.createElement('ul');
 
-    function buildArticleList(articles, level, ul) {
-        for (const article of articles) {
-
-            // Ignore articles nested deeper than 3 levels (this shouldnt be done)
-            if (level > 3) {
-                continue;
-            }
-
-            // Build article
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = `#${article.hash}`;
-            a.textContent = article.title;
-            li.classList.add(`nav-level-${level}`);
-            li.classList.add(`nav-${article.hash}`);
-            li.appendChild(a);
-            ul.appendChild(li);
-
-            // Build nested articles if present
-            if (article.articles != null) {
-                buildArticleList(article.articles, level + 1, ul);
-            }
-        };
-    }
-    buildArticleList(window.dataHandler.data.articles, 1, ul);
-    nav.innerHTML = '';
-    nav.appendChild(ul);
-}
-
-function filterArticles() {
-    const search = document.getElementById("article-search").value;
-    const data = window.dataHandler.data.articles;
-
-    function filterArticlesRecursive(articles, search) {
-        let hasMatch = false;
-        for (const article of articles) {
-            const informations = article.title.toLowerCase() + article.hash.toLowerCase() + article.content.toLowerCase();
-            const matches = informations.includes(search.toLowerCase());
-            const hasChildren = article.articles != null && article.articles.length > 0;
-            const childrenMatch = hasChildren ? filterArticlesRecursive(article.articles, search) : false;
-            const show = matches || childrenMatch;
-            const li = document.querySelector(`.nav-${article.hash}`);
-
-            if (li != null) li.style.display = show ? 'block' : 'none';
-            if (show) hasMatch = true;
+    handleKeyDown(e) {
+        if (e.ctrlKey && e.key === 'p') {
+            e.preventDefault();
+            this.searchElement.focus();
         }
-        return hasMatch;
     }
 
-    filterArticlesRecursive(data, search);
+
+    setupSearch() {
+        document.getElementById("article-search").addEventListener("input", () => {
+            this.filterArticles();
+        });
+    }
+
+
+    updatePage() {
+        this.updateArticleNav();
+        this.updateArticles();
+    }
+
+
+    updateArticles() {
+        this.page = document.location.hash.replace('#', '');
+        this.article = this.dataHandler.getArticleByHash(this.page);
+        this.wrapperElement.innerHTML = this.page == null || this.article == null ?
+            html`<main-article></main-article>` :
+            html`<term-article></term-article>`;
+
+        this.termArticleElement = document.querySelector('term-article');
+    }
+
+
+    updateArticleNav() {
+        this.navListElement.innerHTML = '';
+
+        const buildArticleList = (articles = this.dataHandler.data.articles, level = 1) => {
+            for (const article of articles) {
+
+                // Ignore articles nested deeper than 3 levels (this shouldnt be done)
+                if (level > 3) continue;
+
+                // Build nav item
+                this.navListElement.innerHTML += html`
+                    <li class="nav-level-${level} nav-${article.hash}">
+                        <a href="#${article.hash}">${article.title}</a>
+                    </li>
+                `;
+
+                // Build nested articles if present
+                if (article.articles != null) {
+                    buildArticleList(article.articles, level + 1);
+                }
+            };
+        }
+
+        buildArticleList();
+    }
+
+
+    filterArticles() {
+        const search = this.searchElement.value;
+        const data = this.dataHandler.data.articles;
+
+        function filterArticlesRecursive(articles, search) {
+            let hasMatch = false;
+            for (const article of articles) {
+                const informations = article.title.toLowerCase() + article.hash.toLowerCase() + article.content.toLowerCase();
+                const matches = informations.includes(search.toLowerCase());
+                const hasChildren = article.articles != null && article.articles.length > 0;
+                const childrenMatch = hasChildren ? filterArticlesRecursive(article.articles, search) : false;
+                const show = matches || childrenMatch;
+                const li = document.querySelector(`.nav-${article.hash}`);
+
+                if (li != null) li.style.display = show ? 'block' : 'none';
+                if (show) hasMatch = true;
+            }
+            return hasMatch;
+        }
+
+        filterArticlesRecursive(data, search);
+    }
+
 }
+
+window.app = new App();
+
+customElements.define('term-article', TermArticle);

@@ -1,19 +1,136 @@
 
-class ArticleDataHandler {
+export default class ArticlesHandler {
 
-    /**
-     * Article data from local storage
-     */
-    get data() {
-        const data = localStorage.getItem("article-data");
-        if (data == null) {
-            localStorage.setItem("article-data", JSON.stringify(this.getDefaultData()));
-        }
-
-        return JSON.parse(localStorage.getItem("article-data"));
+    constructor() {
+        this.data = this.#getData();
     }
 
-    getDefaultData() {
+
+    getArticleBreadcrumbs(hash) {
+        function getBreadcrumbOfArticle(articles, breadcrumbs = []) {
+            for (const article of articles) {
+                if (article.hash === hash) {
+                    breadcrumbs.push(article);
+                    return breadcrumbs;
+                }
+
+                if (article.articles) {
+                    const result = getBreadcrumbOfArticle(article.articles, [...breadcrumbs, article]);
+                    if (result) return result;
+                }
+            }
+        }
+
+        return getBreadcrumbOfArticle(this.data.articles);
+    }
+
+
+    getArticleBefore(hash) {
+        const breadcrumbs = this.getArticleBreadcrumbs(hash);
+        const article = breadcrumbs[breadcrumbs.length - 1];
+        const parent = breadcrumbs[breadcrumbs.length - 2];
+        const articles = parent?.articles || this.data.articles;
+        const index = articles.indexOf(article);
+        const prevArticle = articles[index - 1];
+        return prevArticle;
+    }
+
+
+    getArticleAfter(hash) {
+        const breadcrumbs = this.getArticleBreadcrumbs(hash);
+        const article = breadcrumbs[breadcrumbs.length - 1];
+        const parent = breadcrumbs[breadcrumbs.length - 2];
+        const articles = parent?.articles || this.data.articles;
+        const index = articles.indexOf(article);
+        const nextArticle = articles[index + 1];
+        return nextArticle;
+    }
+
+
+    getArticleByTitle(title) {
+        return this.#getArticleByProp(this.data, "title", title);
+    }
+
+
+    getArticleByHash(hash) {
+        return this.#getArticleByProp(this.data, "hash", hash);
+    }
+
+
+    getArticleTitlesRegex() {
+        const articles = this.#getArticleList();
+        const titles = articles.map(a => a.title);
+        return new RegExp(`\\b(${titles.join('|')})\\b`, 'g');;
+    }
+
+
+    saveArticleContent(hash, content) {
+        const article = this.getArticleByHash(hash);
+        article.content = content;
+
+        this.#saveData(this.data);
+    }
+
+
+    #saveData(data) {
+        localStorage.setItem("article-data", JSON.stringify(data));
+    }
+
+
+    #getArticleByProp(data, prop, value) {
+        function getArticleByPropRecursive(articles, prop) {
+            const article = articles.find(a => a[prop] === value);
+            if (article != null) {
+                return article;
+            }
+
+            for (const article of articles) {
+                if (article.articles != null) {
+                    const result = getArticleByPropRecursive(article.articles, prop);
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+        }
+
+        return getArticleByPropRecursive(data.articles, prop);
+    }
+
+
+    #getArticleList() {
+        function getArticleListRecursive(articles) {
+            const articleList = [];
+            for (const article of articles) {
+                articleList.push(article);
+
+                if (article.articles != null) {
+                    const subArticles = getArticleListRecursive(article.articles);
+                    articleList.push(...subArticles);
+                }
+            }
+            return articleList;
+        }
+
+        return getArticleListRecursive(this.data.articles);
+    }
+
+
+    #getData() {
+        const data = localStorage.getItem("article-data");
+
+        if (data == null) {
+            const defaultData = this.#getDefaultData();
+            const defaultJSON = JSON.stringify(defaultData);
+            localStorage.setItem("article-data", defaultJSON);
+            return defaultData;
+        }
+
+        return JSON.parse(data);
+    }
+
+
+    #getDefaultData() {
         return {
             articles: [
                 {
@@ -52,96 +169,5 @@ class ArticleDataHandler {
                 },
             ]
         };
-    }
-
-    getArticleBefore(hash) {
-        const article = this.getArticleByProp("hash", hash);
-        if (article == null) {
-            return null;
-        }
-
-        const history = article.history || [];
-        const parent = history[history.length - 1];
-        const articles = parent?.articles || this.data.articles;
-        const index = articles.indexOf(article);
-        const prevArticle = articles[index - 1];
-        return prevArticle;
-    }
-
-    getArticleAfter(hash) {
-        const article = this.getArticleByProp("hash", hash);
-        if (article == null) {
-            return null;
-        }
-
-        const history = article.history || [];
-        const parent = history[history.length - 1];
-        const articles = parent?.articles || this.data.articles;
-        const index = articles.indexOf(article);
-        const nextArticle = articles[index + 1];
-        return nextArticle;
-    }
-
-    getArticleByProp(prop, value) {
-        function getArticleByPropRecursive(articles, prop, history = []) {
-            const article = articles.find(a => a[prop] === value);
-            if (article != null) {
-                article.history = history;
-                return article;
-            }
-
-            for (const article of articles) {
-                if (article.articles != null) {
-                    history.push(article);
-
-                    const result = getArticleByPropRecursive(article.articles, prop, history);
-                    if (result != null) {
-                        return result;
-                    }
-                }
-            }
-        }
-
-        return getArticleByPropRecursive(this.data.articles, prop);
-    }
-
-    getArticleTitles() {
-        function getArticleTitlesRecursive(articles) {
-            const titles = [];
-            for (const article of articles) {
-                titles.push(article.title);
-
-                if (article.articles != null) {
-                    const subTitles = getArticleTitlesRecursive(article.articles);
-                    titles.push(...subTitles);
-                }
-            }
-            return titles;
-        }
-
-        return getArticleTitlesRecursive(this.data.articles);
-    }
-
-    getArticleByTitle(title) {
-        function getArticleByTitleRecursive(articles, title, history = []) {
-            const article = articles.find(a => a.title === title);
-            if (article != null) {
-                article.history = history;
-                return article;
-            }
-
-            for (const article of articles) {
-                if (article.articles != null) {
-                    history.push(article);
-
-                    const result = getArticleByTitleRecursive(article.articles, title, history);
-                    if (result != null) {
-                        return result;
-                    }
-                }
-            }
-        }
-
-        return getArticleByTitleRecursive(this.data.articles, title);
     }
 }
