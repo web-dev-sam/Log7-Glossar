@@ -9,6 +9,7 @@
     --light-color: #34383e;
     --light-color-hover: #303439;
     --border-color: #2b2d30;
+    --danger: #ff5454;
     --border: 1px solid var(--border-color);
     --border-radius: 0.75rem;
     --padding-big: 4.25rem;
@@ -348,6 +349,7 @@ term-article .sub-nav {
 term-article .title-area {
     display: flex;
     justify-content: space-between;
+    position: relative;
 }
 
 term-article .title {
@@ -358,19 +360,32 @@ term-article .content {
     min-height: 300px;
 }
 
-term-article .fa-pen,
-term-article .fa-floppy-disk {
+term-article .edit-icon {
     cursor: pointer;
     font-size: 2rem;
 }
 
-term-article .fa-pen:hover,
-term-article .fa-floppy-disk:hover {
+term-article .edit-icon:hover,
+term-article .delete-icon:hover {
     opacity: 0.7;
 }
 
 term-article .fa-chevron-right {
     margin: 0 1rem;
+}
+
+term-article .delete-icon {
+    position: absolute;
+    cursor: pointer;
+    right: -5rem;
+}
+
+term-article[is-new] .delete-icon {
+    display: none;
+}
+
+term-article .delete-icon:hover {
+    color: var(--danger);
 }
 
 term-article textarea.new-article-content {

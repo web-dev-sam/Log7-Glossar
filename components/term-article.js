@@ -16,10 +16,6 @@ export default class extends HTMLElement {
         this.contentElement = rootElement.querySelector('.content');
         this.isNew = this.hasAttribute('is-new');
         this.parentHash = this.getAttribute('parent-hash');
-        console.log(this.parentHash);
-        if (this.isNew) {
-            rootElement.querySelector(".edit-icon").classList.add("fa-floppy-disk");
-        }
 
         this.page = document.location.hash.replace('#', '');
         this.article = window.app.dataHandler.getArticleByHash(this.page);
@@ -27,6 +23,11 @@ export default class extends HTMLElement {
 
         this.appendChild(rootElement);
         this.rootElement = this.firstElementChild;
+
+        if (this.isNew) {
+            this.rootElement.querySelector(".edit-icon").classList.add("fa-floppy-disk");
+            this.titleElement.querySelector("input").focus();
+        }
     }
 
 
@@ -91,12 +92,16 @@ export default class extends HTMLElement {
         }
 
         const titleRegex = window.app.dataHandler.getArticleTitlesRegex();
-        const linkedContent = this.article.content.replace(titleRegex, (match) => {
-            if (match === this.article.title) return match;
-            
-            const article = window.app.dataHandler.getArticleByTitle(match);
-            return html`<a href="#${article.hash}">${match}</a>`;
-        });
+        const linkedContent = this.article.content
+            .replace(/\n/g, html`<br />`)
+            .replace(titleRegex, (match) => {
+                if (match.toLowerCase() === this.article.title.toLowerCase()) {
+                    return match;
+                }
+                
+                const article = window.app.dataHandler.getArticleByTitle(match);
+                return html`<a href="#${article.hash}">${match}</a>`;
+            });
 
         this.contentElement.innerHTML = linkedContent;
     }
@@ -142,12 +147,22 @@ export default class extends HTMLElement {
         }
 
         if (saving) {
-            window.app.dataHandler.saveArticle(this.page, this.titleElement.innerText, this.contentElement.innerText);
-            window.app.updatePage();
+            const newArticle = window.app.dataHandler.saveArticle(this.page, this.titleElement.innerText.trim(), this.contentElement.innerText.trim());
+            window.app.updatePage(newArticle);
             editIcon.classList.add("fa-pen");
         } else {
             editIcon.classList.add("fa-floppy-disk");
         }
+    }
+
+    deleteArticle() {
+        if (this.isNew) {
+            window.location.hash = this.parentHash;
+            return;
+        }
+
+        window.app.dataHandler.deleteArticle(this.page);
+        window.app.updatePage();
     }
 
 };

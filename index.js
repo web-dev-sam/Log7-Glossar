@@ -41,7 +41,12 @@ class App {
     }
 
 
-    updatePage() {
+    updatePage(article) {
+        if (article) {
+            console.log(article);
+            document.location.hash = article.hash;
+        }
+
         this.updateArticle();
         this.updateArticleNav();
     }

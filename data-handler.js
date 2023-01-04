@@ -1,3 +1,4 @@
+import DEFAULT_DATA from "./default-data.js";
 
 export default class ArticlesHandler {
 
@@ -69,8 +70,11 @@ export default class ArticlesHandler {
         const article = this.getArticleByHash(hash);
         article.content = content;
         article.title = title;
+        article.hash = this.#generateHash(title);
 
         this.#saveData(this.data);
+
+        return article;
     }
 
 
@@ -95,6 +99,18 @@ export default class ArticlesHandler {
         this.#saveData(this.data);
 
         return article;
+    }
+
+
+    deleteArticle(hash) {
+        const breadcrumbs = this.getArticleBreadcrumbs(hash);
+        const article = breadcrumbs[breadcrumbs.length - 1];
+        const parent = breadcrumbs[breadcrumbs.length - 2];
+        const articles = parent?.articles || this.data.articles;
+        const index = articles.indexOf(article);
+        articles.splice(index, 1);
+
+        this.#saveData(this.data);
     }
 
 
@@ -151,54 +167,12 @@ export default class ArticlesHandler {
         const data = localStorage.getItem("article-data");
 
         if (data == null) {
-            const defaultData = this.#getDefaultData();
-            const defaultJSON = JSON.stringify(defaultData);
+            const defaultJSON = JSON.stringify(DEFAULT_DATA);
             localStorage.setItem("article-data", defaultJSON);
-            return defaultData;
+            return DEFAULT_DATA;
         }
 
         return JSON.parse(data);
     }
 
-
-    #getDefaultData() {
-        return {
-            articles: [
-                {
-                    hash: "web-components",
-                    title: "Web Components",
-                    content: "Web Components are a set of web platform APIs that allow you to create new custom, reusable, encapsulated HTML tags to use in web pages and web apps.",
-                    articles: [
-                        {
-                            hash: "shadow-dom",
-                            title: "Shadow DOM",
-                            content: "The Shadow DOM is a DOM tree attached to an element, but rendered separately from a document's main DOM tree.",
-                            articles: [
-                                {
-                                    hash: "shadow-root",
-                                    title: "Shadow Root",
-                                    content: "The Shadow DOM is a DOM tree attached to an element, but rendered separately from a document's main DOM tree.",
-                                },
-                            ],
-                        },
-                        {
-                            hash: "custom-elements",
-                            title: "Custom Elements",
-                            content: "Custom Elements are a set of web platform APIs that allow you to define custom elements and their behavior, which can then be used as desired in your user interface."
-                        },
-                        {
-                            hash: "html-templates",
-                            title: "HTML Templates",
-                            content: "The HTML template element is a mechanism for holding HTML that is not to be rendered immediately when a page is loaded but may be instantiated subsequently during runtime using JavaScript."
-                        },
-                        {
-                            hash: "html-imports",
-                            title: "HTML Imports",
-                            content: "The HTML Imports feature allows users to include and reuse HTML documents in other HTML documents."
-                        },
-                    ],
-                },
-            ]
-        };
-    }
 }
