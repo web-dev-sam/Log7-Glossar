@@ -123,12 +123,12 @@ export default class extends HTMLElement {
 
 
     editArticle() {
-        const content = this.rootElement.querySelector(".content");
         const editIcon = this.rootElement.querySelector(".edit-icon");
         const saving = editIcon.classList.contains("fa-floppy-disk");
 
-        content.contentEditable = saving ? "false" : "true";
-        content.focus();
+        this.titleElement.contentEditable = saving ? "false" : "true";
+        this.contentElement.contentEditable = saving ? "false" : "true";
+        this.contentElement.focus();
 
         if (saving && this.isNew) {
             const title = this.rootElement.querySelector(".new-article-title").value;
@@ -140,8 +140,8 @@ export default class extends HTMLElement {
         }
 
         if (saving) {
-            window.app.dataHandler.saveArticleContent(this.page, content.innerText);
-            window.app.updateArticle();
+            window.app.dataHandler.saveArticle(this.page, this.titleElement.innerText, this.contentElement.innerText);
+            window.app.updatePage();
             editIcon.classList.add("fa-pen");
         } else {
             editIcon.classList.add("fa-floppy-disk");

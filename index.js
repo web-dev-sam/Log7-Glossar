@@ -42,8 +42,8 @@ class App {
 
 
     updatePage() {
-        this.updateArticleNav();
         this.updateArticle();
+        this.updateArticleNav();
     }
 
 
@@ -80,8 +80,8 @@ class App {
 
                 // Build nav item
                 this.navListElement.innerHTML += html`
-                    <li class="nav-level-${level} nav-${article.hash}">
-                        <a href="#${article.hash}">${article.title}</a><i class="fa-solid fa-plus" onclick="window.app.addArticleCategory('${article.hash}')"></i>
+                    <li class="nav-level-${level} nav-item nav-${article.hash} ${article.hash === this.page ? 'active-nav' : ''}">
+                        <a href="#${article.hash}" title="${article.title}">${article.title}</a><i class="fa-solid fa-plus" onclick="window.app.addArticleCategory('${article.hash}')"></i>
                     </li>
                 `;
 
@@ -95,7 +95,7 @@ class App {
         buildArticleList();
 
         this.navListElement.innerHTML += html`
-            <li class="nav-level-1 add-article-category" onclick="window.app.addArticleCategory()">
+            <li class="nav-level-1 nav-item add-article-category" onclick="window.app.addArticleCategory()">
                 <i class="fa-solid fa-plus"></i>
             </li>
         `;

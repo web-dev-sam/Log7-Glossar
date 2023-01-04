@@ -65,9 +65,10 @@ export default class ArticlesHandler {
     }
 
 
-    saveArticleContent(hash, content) {
+    saveArticle(hash, title, content) {
         const article = this.getArticleByHash(hash);
         article.content = content;
+        article.title = title;
 
         this.#saveData(this.data);
     }
@@ -92,7 +93,7 @@ export default class ArticlesHandler {
         }
 
         this.#saveData(this.data);
-        
+
         return article;
     }
 
