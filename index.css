@@ -54,6 +54,10 @@ h3 {
 i {
     pointer-events: none;
 }
+button {
+    font-family : inherit;
+    font-size: 1em;
+}
 .center {
     text-align: center;
 }
@@ -349,7 +353,7 @@ term-article .delete-icon {
 term-article[is-new] .delete-icon {
     display: none;
 }
-term-article .delete-icon:hover {
+term-article .delete-icon:hover path {
     color: var(--danger);
 }
 term-article textarea.new-article-content {
