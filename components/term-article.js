@@ -95,7 +95,7 @@ export default class extends HTMLElement {
                 }
                 
                 const article = window.app.dataHandler.getArticleByTitle(match);
-                return html`<a href="#${article.hash}">${match}</a>`;
+                return html`<a href="#${article.hash}" class="hover-opacity">${match}</a>`;
             });
 
         this.contentElement.innerHTML = linkedContent;
@@ -120,7 +120,7 @@ export default class extends HTMLElement {
         // Then reduce the array to one string and add it to the DOM
         const breadcrumbsHTML = breadcrumbs
             .map(breadcrumb => ([
-                html`<a href="#${breadcrumb.hash}">${breadcrumb.title}</a>`,
+                html`<a href="#${breadcrumb.hash}" class="hover-opacity">${breadcrumb.title}</a>`,
                 html`<i class="fa-solid fa-chevron-right"></i>`,
             ]))
             .flat()
@@ -223,13 +223,14 @@ export default class extends HTMLElement {
     #deleteAlert(title, message, confirmText, cancelText, confirmCallback) {
         const alert = document.createElement("div");
         alert.classList.add("alert");
+        alert.onclick = () => alert.remove();
         alert.innerHTML = html`
             <div class="alert-content">
                 <div class="alert-title">${title}</div>
                 <div class="alert-message">${message}</div>
                 <div class="alert-buttons">
-                <button class="alert-cancel">${cancelText}</button>
-                    <button class="alert-confirm">${confirmText}</button>
+                    <button class="alert-cancel hover-opacity">${cancelText}</button>
+                    <button class="alert-confirm hover-opacity">${confirmText}</button>
                 </div>
             </div>
         `;

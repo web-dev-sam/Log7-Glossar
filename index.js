@@ -98,7 +98,7 @@ class App {
                 // Build nav item
                 this.navListElement.innerHTML += html`
                     <li class="nav-level-${level} nav-item nav-${article.hash} ${article.hash === this.page ? 'active-nav' : ''}">
-                        <a href="#${article.hash}" title="${article.title}">${article.title}</a><i class="fa-solid fa-plus" onclick="window.app.addArticleCategory('${article.hash}')"></i>
+                        <a href="#${article.hash}" title="${article.title}">${article.title}</a><i class="fa-solid hover-opacity fa-plus" onclick="window.app.addArticleCategory('${article.hash}')"></i>
                     </li>
                 `;
 
@@ -112,8 +112,8 @@ class App {
         buildArticleList();
 
         this.navListElement.innerHTML += html`
-            <li class="nav-level-1 nav-item add-article-category" onclick="window.app.addArticleCategory()">
-                <i class="fa-solid fa-plus"></i>
+            <li class="nav-level-1 nav-item add-article-category hover-opacity" onclick="window.app.addArticleCategory()">
+                <span>Neue Kategorie</span>
             </li>
         `;
     }
