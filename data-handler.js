@@ -67,6 +67,10 @@ export default class ArticlesHandler {
 
 
     saveArticle(hash, title, content) {
+        if (!title || !content) {
+            return;
+        }
+        
         const article = this.getArticleByHash(hash);
         article.content = content;
         article.title = title;
@@ -79,6 +83,10 @@ export default class ArticlesHandler {
 
 
     addArticle(title, content, parentHash) {
+        if (!title || !content) {
+            return;
+        }
+
         const article = {
             title,
             content,

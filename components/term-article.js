@@ -7,13 +7,14 @@ export default class extends HTMLElement {
         const template = document.querySelector('#term-article-template');
         const templateContent = template.content;
         const rootElement = templateContent.cloneNode(true);
+        this.appendChild(rootElement);
 
-
-        this.prevElement = rootElement.querySelector('.prev');
-        this.nextElement = rootElement.querySelector('.next');
-        this.breadcrumbElement = rootElement.querySelector('.breadcrumbs');
-        this.titleElement = rootElement.querySelector('.title');
-        this.contentElement = rootElement.querySelector('.content');
+        this.rootElement = this.firstElementChild;
+        this.prevElement = this.rootElement.querySelector('.prev');
+        this.nextElement = this.rootElement.querySelector('.next');
+        this.breadcrumbElement = this.rootElement.querySelector('.breadcrumbs');
+        this.titleElement = this.rootElement.querySelector('.title');
+        this.contentElement = this.rootElement.querySelector('.content');
         this.isNew = this.hasAttribute('is-new');
         this.parentHash = this.getAttribute('parent-hash');
 
@@ -21,11 +22,8 @@ export default class extends HTMLElement {
         this.article = window.app.dataHandler.getArticleByHash(this.page);
         this.build();
 
-        this.appendChild(rootElement);
-        this.rootElement = this.firstElementChild;
-
         if (this.isNew) {
-            this.rootElement.querySelector(".edit-icon").classList.add("fa-floppy-disk");
+            this.rootElement.querySelector('.edit-icon').classList.add("fa-floppy-disk");
             this.titleElement.querySelector("input").focus();
         }
     }
@@ -109,11 +107,11 @@ export default class extends HTMLElement {
      */
     buildBreadcrumbs() {
         const breadcrumbs = this.isNew ? 
-            window.app.dataHandler.getArticleBreadcrumbs(this.parentHash) :
+            window.app.dataHandler.getArticleBreadcrumbs(this.parentHash) ?? [] :
             window.app.dataHandler.getArticleBreadcrumbs(this.page);
 
         if (this.isNew) breadcrumbs.push({
-            title: "Neuer Artikel",
+            title: breadcrumbs.length === 0 ? "Neue Kategorie" : "Neuer Artikel",
             hash: "new-article",
         });
 
@@ -134,8 +132,7 @@ export default class extends HTMLElement {
 
 
     editArticle() {
-        const editIcon = this.rootElement.querySelector(".edit-icon");
-        const saving = editIcon.classList.contains("fa-floppy-disk");
+        const saving = this.rootElement.querySelector('svg.edit-icon').classList.contains("fa-floppy-disk");
 
         this.titleElement.contentEditable = saving ? "false" : "true";
         this.contentElement.contentEditable = saving ? "false" : "true";
@@ -145,23 +142,34 @@ export default class extends HTMLElement {
             const title = this.rootElement.querySelector(".new-article-title").value;
             const content = this.rootElement.querySelector(".new-article-content").value;
             const newArticle = window.app.dataHandler.addArticle(title, content, this.parentHash);
+            if (newArticle == null) {
+                this.#wiggleElement(this.rootElement.querySelector('svg.edit-icon'));
+                return;
+            }
+
             window.app.updateArticleNav();
             window.location.hash = newArticle.hash;
             return;
         }
 
         if (saving) {
-            const newArticle = this.saveChanges();
-            window.app.updatePage(newArticle);
-            editIcon.classList.add("fa-pen");
+            this.save();
         } else {
-            editIcon.classList.add("fa-floppy-disk");
+            this.rootElement.querySelector('svg.edit-icon').classList.add("fa-floppy-disk");
         }
     }
 
-    saveChanges() {
-        window.app.dataHandler.saveArticle(this.page, this.titleElement.innerText.trim(), this.contentElement.innerText.trim());
+
+    save() {
+        const newArticle = this.#saveChanges();
+        if (newArticle == null) {
+            this.#wiggleElement(this.rootElement.querySelector('svg.edit-icon'));
+            return;
+        }
+
+        window.app.updatePage(newArticle);
     }
+
 
     cancelEditing() {
         if (this.isNew) {
@@ -172,14 +180,70 @@ export default class extends HTMLElement {
         window.app.updatePage();
     }
 
+
     deleteArticle() {
         if (this.isNew) {
             window.location.hash = this.parentHash;
             return;
         }
 
-        window.app.dataHandler.deleteArticle(this.page);
-        window.app.updatePage();
+        this.#deleteAlert(
+            "Artikel löschen", 
+            "Möchtest du diesen Artikel wirklich löschen?", 
+            "Löschen", 
+            "Abbrechen", 
+            () => {
+                window.app.dataHandler.deleteArticle(this.page);
+                window.app.updatePage();
+            }
+        );
+    }
+
+    #wiggleElement(element) {
+        element.animate([
+            { transform: "translateX(-5px)" },
+            { transform: "translateX(5px)" },
+            { transform: "translateX(-5px)" },
+            { transform: "translateX(5px)" },
+            { transform: "translateX(-5px)" },
+            { transform: "translateX(5px)" },
+        ], {
+            duration: 200,
+            iterations: 1,
+        });
+    }
+
+
+    #saveChanges() {
+        const title = this.titleElement.innerText.trim();
+        const content = this.contentElement.innerText.trim();
+        return window.app.dataHandler.saveArticle(this.page, title, content);
+    }
+
+    #deleteAlert(title, message, confirmText, cancelText, confirmCallback) {
+        const alert = document.createElement("div");
+        alert.classList.add("alert");
+        alert.innerHTML = html`
+            <div class="alert-content">
+                <div class="alert-title">${title}</div>
+                <div class="alert-message">${message}</div>
+                <div class="alert-buttons">
+                <button class="alert-cancel">${cancelText}</button>
+                    <button class="alert-confirm">${confirmText}</button>
+                </div>
+            </div>
+        `;
+
+        alert.querySelector(".alert-confirm").addEventListener("click", () => {
+            confirmCallback();
+            alert.remove();
+        });
+
+        alert.querySelector(".alert-cancel").addEventListener("click", () => {
+            alert.remove();
+        });
+
+        this.appendChild(alert);
     }
 
 };

@@ -41,9 +41,7 @@ class App {
             (e.key === 's' && e.ctrlKey)
         )) {
             e.preventDefault();
-
-            const newArticle = this.termArticleElement.saveChanges();
-            window.app.updatePage(newArticle);
+            this.termArticleElement.save();
         }
     }
 
