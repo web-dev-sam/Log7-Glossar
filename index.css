@@ -139,6 +139,12 @@ li.nav-level-1 svg {
     top: -0.5rem;
 }
 
+li.nav-level-1 a {
+    max-height: 6.3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 li.nav-item:not(.nav-level-1) {
     height: 2rem;
 }
