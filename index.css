@@ -260,7 +260,6 @@ main > div {
     margin: auto;
     max-width: 50vw;
     width: 60%;
-    height: 100%;
 }
 
 .invisible {
@@ -290,22 +289,36 @@ term-article .breadcrumbs a {
     text-decoration: underline;
 }
 
-term-article a:hover {
+term-article p:not([contenteditable="true"]) a:hover {
     opacity: 0.7;
-    text-decoration: underline;
 }
 
 term-article p:not([contenteditable="true"]) a {
+    position: relative;
+    display: inline;
     background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-size: 100% 100%;
+    background-position: 100%;
     cursor: pointer;
     font-weight: bold;
+    text-decoration: underline;
+}
+
+term-article p:not([contenteditable="true"]) a:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    outline: 1px solid var(--primary);
+    width: 100%;
 }
 
 .add-article-category svg {
-    background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    background: linear-gradient(45deg, var(--primary) 0%, var(--secondary) 100%);
     background-clip: border-box;
     -webkit-background-clip: border-box;
     -webkit-text-fill-color: transparent;

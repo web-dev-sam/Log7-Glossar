@@ -92,6 +92,8 @@ export default class extends HTMLElement {
 
         const titleRegex = window.app.dataHandler.getArticleTitlesRegex();
         const linkedContent = this.article.content.replace(titleRegex, (match) => {
+            if (match === this.article.title) return match;
+            
             const article = window.app.dataHandler.getArticleByTitle(match);
             return html`<a href="#${article.hash}">${match}</a>`;
         });
