@@ -6,5 +6,7 @@ export default class extends HTMLElement {
         const template = document.querySelector('#main-article-template');
         const templateContent = template.content;
         this.appendChild(templateContent.cloneNode(true));
+
+        document.title = 'Glossar - Log7 Consult GmbH';
     }
 }

@@ -4,7 +4,6 @@ export default class ArticlesHandler {
 
     constructor() {
         this.data = this.#getData();
-        console.log(this.data);
     }
 
 

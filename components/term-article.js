@@ -69,9 +69,13 @@ export default class extends HTMLElement {
             this.titleElement.innerHTML = html`
                 <input class="new-article-title" placeholder="Your Title..."></input>
             `;
+            document.title = this.breadcrumbs === 0 ? 
+                "Neue Kategorie - Log7 Consult GmbH" : 
+                "Neuer Artikel - Log7 Consult GmbH";
             return;
         }
         this.titleElement.textContent = this.article?.title;
+        document.title = this.article?.title + ' - Log7 Consult GmbH';
     }
 
 
@@ -113,19 +117,19 @@ export default class extends HTMLElement {
      * Build breadcrumbs and add them to the DOM
      */
     buildBreadcrumbs() {
-        const breadcrumbs = this.isNew ? 
+        this.breadcrumbs = this.isNew ? 
             window.app.dataHandler.getArticleBreadcrumbs(this.parentHash) ?? [] :
             window.app.dataHandler.getArticleBreadcrumbs(this.page);
 
-        if (this.isNew) breadcrumbs.push({
-            title: breadcrumbs.length === 0 ? "Neue Kategorie" : "Neuer Artikel",
+        if (this.isNew) this.breadcrumbs.push({
+            title: this.breadcrumbs.length === 0 ? "Neue Kategorie" : "Neuer Artikel",
             hash: "new-article",
         });
 
         // Map the breadcrumbs to an HTML string array of links and arrows
         // Then flatten the array and remove the last arrow
         // Then reduce the array to one string and add it to the DOM
-        const breadcrumbsHTML = breadcrumbs
+        const breadcrumbsHTML = this.breadcrumbs
             .map(breadcrumb => ([
                 html`<a href="#${breadcrumb.hash}" class="hover-opacity">${breadcrumb.title}</a>`,
                 html`<i class="fa-solid fa-chevron-right"></i>`,
