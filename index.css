@@ -1,15 +1,14 @@
 :root {
     --primary: #54daff;
     --secondary: #93ff60;
-    --dark-dark: #181a1d;
-    --dark: #1d2023;
-    --drak-hover: #222529;
+    --danger: #ff5454;
     --text-color: #fff;
     --text-color-muted: #515961;
     --light-color: #34383e;
     --light-color-hover: #303439;
     --border-color: #2b2d30;
-    --danger: #ff5454;
+    --dark: #1d2023;
+    --dark-dark: #181a1d;
     --border: 1px solid var(--border-color);
     --border-radius: 0.75rem;
     --padding-big: 4.25rem;
