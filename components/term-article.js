@@ -87,14 +87,21 @@ export default class extends HTMLElement {
         }
 
         const titleRegex = window.app.dataHandler.getArticleTitlesRegex();
-        const linkedContent = this.article.content
-            .replace(/\n/g, html`<br />`)
+        const contentWithNewlines = this.article.content.replace(/\n/g, html`<br />`);
+        const alreadyLinked = new Set();
+
+        const linkedContent = contentWithNewlines
             .replace(titleRegex, (match) => {
                 if (match.toLowerCase() === this.article.title.toLowerCase()) {
                     return match;
                 }
                 
                 const article = window.app.dataHandler.getArticleByTitle(match);
+                if (article == null || alreadyLinked.has(article.hash)) {
+                    return match;
+                }
+
+                alreadyLinked.add(article.hash);
                 return html`<a href="#${article.hash}" class="hover-opacity">${match}</a>`;
             });
 
