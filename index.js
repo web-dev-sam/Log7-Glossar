@@ -94,10 +94,13 @@ class App {
                 // Ignore articles nested deeper than 3 levels (this shouldnt be done)
                 if (level > 3) continue;
 
+                const addButton = level > 0 ? html`` : "";
+
                 // Build nav item
                 this.navListElement.innerHTML += html`
                     <li class="nav-level-${level} nav-item nav-${article.hash} ${article.hash === this.page ? 'active-nav' : ''}">
-                        <a href="#${article.hash}" title="${article.title}">${article.title}</a><i class="fa-solid hover-opacity fa-plus" onclick="window.app.addArticleCategory('${article.hash}')"></i>
+                        <a href="#${article.hash}" title="${article.title}">${article.title}</a>
+                        <i tabindex="-1" class="fa-solid hover-opacity fa-plus ${level > 2 ? "hidden" : ""}" onclick="window.app.addArticleCategory('${article.hash}')"></i>
                     </li>
                 `;
 

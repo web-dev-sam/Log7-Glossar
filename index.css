@@ -156,7 +156,7 @@ li.nav-item:not(.nav-level-1) a {
     border-radius: var(--border-radius);
 }
 li.nav-item:not(.nav-level-1) svg {
-    display: inline-block;
+    display: none;
     padding: 0.5rem 1rem;
     height: 0.9rem;
 }
@@ -174,11 +174,8 @@ li.nav-item:not(.add-article-category) svg:hover {
     background-color: var(--dark);
     border-radius: var(--border-radius);
 }
-li.nav-item svg {
-    display: none !important;
-}
 li.nav-item:hover svg {
-    display: inline-block !important;
+    display: inline-block;
 }
 li.active-nav:not(.nav-level-1) a {
     background-color: var(--light-color);
@@ -231,6 +228,9 @@ main > div {
 }
 .invisible {
     visibility: hidden;
+}
+.hidden {
+    display: none !important;
 }
 [contenteditable="true"] {
     outline: none;
