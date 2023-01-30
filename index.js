@@ -100,7 +100,7 @@ class App {
                 this.navListElement.innerHTML += html`
                     <li class="nav-level-${level} nav-item nav-${article.hash} ${article.hash === this.page ? 'active-nav' : ''}">
                         <a href="#${article.hash}" title="${article.title}">${article.title}</a>
-                        <i tabindex="-1" class="fa-solid hover-opacity fa-plus ${level > 2 ? "hidden" : ""}" onclick="window.app.addArticleCategory('${article.hash}')"></i>
+                        <i aria-hidden="true" class="fa-solid hover-opacity fa-plus ${level > 2 ? "hidden" : ""}" onclick="window.app.addArticleCategory('${article.hash}')"></i>
                     </li>
                 `;
 
@@ -114,7 +114,7 @@ class App {
         buildArticleList();
 
         this.navListElement.innerHTML += html`
-            <li class="nav-level-1 nav-item add-article-category hover-opacity" onclick="window.app.addArticleCategory()">
+            <li aria-hidden="true" class="nav-level-1 nav-item add-article-category hover-opacity" onclick="window.app.addArticleCategory()">
                 <span>Neue Kategorie</span>
             </li>
         `;
