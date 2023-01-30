@@ -122,7 +122,18 @@ export default class ArticlesHandler {
 
 
     #generateHash(title) {
-        return title.toLowerCase().replaceAll(/[^a-z0-9]/g, "-");
+        const hash = title.toLowerCase().replaceAll(/[^a-z0-9]/g, "-");
+        if (this.#hashExists(hash)) {
+            return this.#generateHash(hash + "-" + Math.random().toString(36).substring(2, 15));
+        }
+
+        return hash;
+    }
+
+
+    #hashExists(hash) {
+        const article = this.getArticleByHash(hash);
+        return article != null;
     }
 
 
