@@ -15,6 +15,8 @@ export default class extends HTMLElement {
         this.breadcrumbElement = this.rootElement.querySelector('.breadcrumbs');
         this.titleElement = this.rootElement.querySelector('.title');
         this.contentElement = this.rootElement.querySelector('.content');
+        this.contentElement.focus();
+
         this.isNew = this.hasAttribute('is-new');
         this.parentHash = this.getAttribute('parent-hash');
 
@@ -70,12 +72,12 @@ export default class extends HTMLElement {
                 <input class="new-article-title" placeholder="Your Title..."></input>
             `;
             document.title = this.breadcrumbs === 0 ? 
-                "Neue Kategorie - Log7 Consult GmbH" : 
-                "Neuer Artikel - Log7 Consult GmbH";
+                "Neue Kategorie" : 
+                "Neuer Artikel";
             return;
         }
         this.titleElement.textContent = this.article?.title;
-        document.title = this.article?.title + ' - Log7 Consult GmbH';
+        document.title = this.article?.title;
     }
 
 
@@ -130,8 +132,8 @@ export default class extends HTMLElement {
         // Then flatten the array and remove the last arrow
         // Then reduce the array to one string and add it to the DOM
         const breadcrumbsHTML = this.breadcrumbs
-            .map(breadcrumb => ([
-                html`<a href="#${breadcrumb.hash}" class="hover-opacity">${breadcrumb.title}</a>`,
+            .map((breadcrumb, i) => ([
+                html`<a href="#${breadcrumb.hash}" tabindex="${12 - i}" role="link" class="hover-opacity">${breadcrumb.title}</a>`,
                 html`<i class="fa-solid fa-chevron-right"></i>`,
             ]))
             .flat()

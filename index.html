@@ -20,18 +20,17 @@
 </head>
 
 <body>
-    <aside>
-        <div class="logo-wrapper" onclick="location = '#'">
+    <aside role="region" aria-label="Glossar Navigation">
+        <div class="logo-wrapper" onclick="location = '#'" aria-hidden="true">
             <img src="assets/logo.svg" height="70" alt="Log7 Consult GmbH">
         </div>
-        <label for="article-search" class="sr-only">Suche</label>
         <input id="article-search" aria-label="Suche" name="article-search" type="text" placeholder="Suchen... (Strg+P)">
-        <nav id="article-nav">
+        <nav id="article-nav" tabindex="0" role="navigation" aria-label="Glossar Begriffe">
             <ul></ul>
         </nav>
     </aside>
     <main>
-        <div id="article-wrapper">
+        <div id="article-wrapper" tabindex="1" aria-live="polite" role="region" aria-label="Begriff Definition">
             <term-article></term-article>
         </div>
         <template id="main-article-template">
@@ -48,19 +47,19 @@
         </template>
         <template id="term-article-template">
             <article>
-                <div class="sub-nav">
-                    <a class="prev"><i class="fa-solid hover-opacity fa-arrow-left"></i></a>
-                    <a class="next"><i class="fa-solid hover-opacity fa-arrow-right"></i></a>
+                <div class="sub-nav" tabindex="4" role="navigation" aria-label="Vor und Zurück">
+                    <a class="prev" tabindex="5" role="link" aria-label="Vorheriger Begriff"><i class="fa-solid hover-opacity fa-arrow-left"></i></a>
+                    <a class="next" tabindex="6" role="link" aria-label="Nächster Begriff"><i class="fa-solid hover-opacity fa-arrow-right"></i></a>
                 </div>
-                <div class="breadcrumbs"></div>
+                <div class="breadcrumbs" tabindex="7" role="navigation" aria-label="Kategorien des Begriffs"></div>
                 <div class="title-area">
-                    <h2 class="title"></h2>
+                    <h2 class="title" tabindex="2" role="heading" aria-label="Begriff"></h2>
                     <h2>
-                        <i class="fa-solid edit-icon hover-opacity fa-pen" onclick="window.app.termArticleElement.editArticle()"></i>
-                        <i class="fa-solid delete-icon hover-opacity fa-trash" onclick="window.app.termArticleElement.deleteArticle()"></i>
+                        <i tabindex="-1" class="fa-solid edit-icon hover-opacity fa-pen" onclick="window.app.termArticleElement.editArticle()"></i>
+                        <i tabindex="-1" class="fa-solid delete-icon hover-opacity fa-trash" onclick="window.app.termArticleElement.deleteArticle()"></i>
                     </h2>
                 </div>
-                <p class="content"></p>
+                <p class="content" tabindex="3" role="definition"></p>
             </article>
         </template>
     </main>
