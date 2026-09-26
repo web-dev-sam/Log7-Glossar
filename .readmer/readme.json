@@ -1,0 +1,15 @@
+{
+  "title": "Log7 Glossar",
+  "tagline": "A small web glossary for logistics terms, made as a project for uni. 📚",
+  "why": [
+    "University assignment; kept for the memories."
+  ],
+  "sections": [
+    {
+      "title": "Where to find it",
+      "body": [
+        "Live at https://glossary.webry.com"
+      ]
+    }
+  ]
+}
