@@ -10,7 +10,7 @@ _A small web glossary for logistics terms, made as a project for uni. 📚_
 &nbsp;
 
 ## Why does this exist?
-1. University assignment; kept for the memories.
+A university assignment.
 
 ## Where to find it
 

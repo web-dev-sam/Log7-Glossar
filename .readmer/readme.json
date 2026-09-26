@@ -1,9 +1,7 @@
 {
   "title": "Log7 Glossar",
   "tagline": "A small web glossary for logistics terms, made as a project for uni. 📚",
-  "why": [
-    "University assignment; kept for the memories."
-  ],
+  "why": "A university assignment.",
   "sections": [
     {
       "title": "Where to find it",
